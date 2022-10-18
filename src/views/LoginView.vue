@@ -9,18 +9,21 @@
     </div>
 
     <!-- Login -->
-    <form class="p-8 flex flex-col bg-light-grey rounded-md shadow-lg">
+    <form
+      @submit.prevent="login"
+      class="p-8 flex flex-col bg-light-grey rounded-md shadow-lg"
+    >
       <h1 class="text-3xl text-at-light-green mb-4">Login</h1>
       <div class="flex flex-col mb-2">
         <label for="email" class="mb-1 text-sm text-at-light-green"
           >Email</label
         >
         <input
-          type="text"
+          type="email"
           required
           class="p-2 text-green-500 focus:outline-none"
           id="email"
-          :v-model="email"
+          v-model="email"
         />
       </div>
       <div class="flex flex-col mb-2">
@@ -28,11 +31,11 @@
           >Password</label
         >
         <input
-          type="text"
+          type="password"
           required
           class="p-2 text-green-500 focus:outline-none"
           id="password"
-          :v-model="password"
+          v-model="password"
         />
       </div>
 
@@ -53,20 +56,44 @@
 
 <script>
 import { ref } from 'vue';
+import { supabase } from '@/supabase/init';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'LoginView',
   setup() {
     // Create data / vars
+    const router = useRouter();
     const email = ref(null);
     const password = ref(null);
     const errorMessage = ref(null);
+
     // Login function
+    const login = async () => {
+      try {
+        const { error } = await supabase.auth.signIn({
+          email: email.value,
+          password: password.value,
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        router.push({ name: 'Home' });
+      } catch (error) {
+        errorMessage.value = `Error: ${error.message}`;
+        setTimeout(() => {
+          errorMessage.value = null;
+        }, 5000);
+      }
+    };
 
     return {
       email,
       password,
       errorMessage,
+      login,
     };
   },
 };
