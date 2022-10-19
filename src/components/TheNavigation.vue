@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import store from '@/stores/store';
+import { useUserStore } from '@/stores/user';
 import { supabase } from '@/supabase/init';
 import { useRouter } from 'vue-router';
 import { computed } from 'vue';
@@ -32,7 +32,7 @@ import { computed } from 'vue';
 export default {
   setup() {
     // get user from store
-    const user = computed(() => store.state.user);
+    const user = computed(() => useUserStore().user);
 
     // Setup ref to router
     const router = useRouter();
