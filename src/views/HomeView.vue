@@ -23,7 +23,7 @@
       >
         <!-- Cardio Img -->
         <img
-          v-if="workout.wotkoutType === 'cardio'"
+          v-if="workout.workoutType === 'cardio'"
           src="@/assets/images/running-light-green.png"
           class="h-24 w-auto"
           alt=""
