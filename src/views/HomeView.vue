@@ -16,7 +16,7 @@
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
     >
       <router-link
-        :to="{ name: '' }"
+        :to="{ name: 'Workout', params: { id: workout.id } }"
         class="flex flex-col items-center bg-light-grey p-8 shadow-md cursor-pointer"
         v-for="(workout, index) in data"
         :key="index"
