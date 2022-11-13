@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
+import { supabase } from '@/supabase/init';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,6 +11,7 @@ const router = createRouter({
       component: HomeView,
       meta: {
         title: 'Home',
+        auth: false,
       },
     },
     {
@@ -18,6 +20,7 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
       meta: {
         title: 'Login',
+        auth: false,
       },
     },
     {
@@ -26,6 +29,7 @@ const router = createRouter({
       component: () => import('../views/RegisterView.vue'),
       meta: {
         title: 'Register',
+        auth: false,
       },
     },
     {
@@ -34,6 +38,7 @@ const router = createRouter({
       component: () => import('../views/CreateView.vue'),
       meta: {
         title: 'Create',
+        auth: true,
       },
     },
     {
@@ -42,6 +47,7 @@ const router = createRouter({
       component: () => import('../views/WorkoutView.vue'),
       meta: {
         title: 'View',
+        auth: false,
       },
     },
   ],
@@ -54,5 +60,18 @@ router.beforeEach((to, from, next) => {
 });
 
 // Route guard for auth routes
+router.beforeEach((to, from, next) => {
+  const user = supabase.auth.user();
+
+  if (to.matched.some((res) => res.meta.auth)) {
+    if (user) {
+      next();
+    } else {
+      next({ name: 'Login' });
+    }
+  }
+
+  next();
+});
 
 export default router;
